@@ -46,9 +46,11 @@ export default class Router {
   }
 
   navigate(path, state = this.navigateState()) {
-    var newPath = path;
+    var newPath;
     if (!hasLeadingSlash(path)) {
-      newPath = this.currentPath() + path;
+      newPath = `#${this.currentPath()}${path}`;
+    } else {
+      newPath = `#${path}`;
     }
     window.location.hash = newPath;
     window.history.replaceState(state, '', newPath);

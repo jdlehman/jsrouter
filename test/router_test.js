@@ -46,8 +46,21 @@ describe('Router', function() {
       var replaceStateStub = sinon.stub(window.history, 'replaceState');
       var data = {data: 'test'};
       router.navigate('/newPath', data);
-      sinon.assert.calledWith(replaceStateStub, data, '', '/newPath');
+      sinon.assert.calledWith(replaceStateStub, data, '', '#/newPath');
       replaceStateStub.restore();
+    });
+
+    it('sets the route correctly', function() {
+      var router = new Router();
+      router.navigate('/test');
+      assert.equal(window.location.hash, '#/test');
+    });
+
+    it('pushes a relative route to the end of the url', function() {
+      var router = new Router();
+      window.location.hash = '/startingRoute/more';
+      router.navigate('end');
+      assert.equal(window.location.hash, '#/startingRoute/more/end');
     });
   });
 
