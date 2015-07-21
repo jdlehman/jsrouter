@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jdlehman/router.git"
+    "url": "https://github.com/jdlehman/jsrouter.git"
   },
   "bugs": {
-    "url": "https://github.com/jdlehman/router/issues"
+    "url": "https://github.com/jdlehman/jsrouter/issues"
   },
   "keywords": [
     "router",
