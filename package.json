@@ -1,6 +1,6 @@
 {
   "name": "jsrouter",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Minimal client side router",
   "main": "dist/jsrouter.min.js",
   "scripts": {
