@@ -12,16 +12,22 @@
 
 ## Usage
 
-This is to provide a good idea of what the API looks like and what `jsrouter` can do. Check out the documentation for more details as well as an in depth breakdown of the API. (COMING SOON)
+This is to provide a good idea of what the API looks like and what `jsrouter` can do. Check out the [documentation](docs/router.md) for more details as well as an in depth breakdown of the API.
+
+### Create the router
 
 ```js
 import Router from 'jsrouter';
 
 // create a new router
 var router = new Router();
+```
 
+### Define routes
+
+```js
 // define routes
-router.map((match) => {
+router.map(function(match) {
   match('/').to('home'); // where "/" is the route and "home" is the handler name
   match('/signup').to('createAccount');
   match('/signin').to('login');
@@ -32,7 +38,13 @@ router.map((match) => {
     });
   });
 });
+```
 
+[In depth documentation](/docs/defining-routes.md)
+
+### Define handlers
+
+```js
 // define handlers
 router.addHandler('home', {
   // enter/leave called when route is entered and left
@@ -46,7 +58,13 @@ router.addHandler('home', {
   }
 });
 // etc...
+```
 
+[In depth documentation](/docs/defining-handlers.md)
+
+### Using the router
+
+```js
 // using the router
 router.navigate('/');
 router.navigate('/signup', {promo: 'test'}); // optionally takes data to store in window.history.replaceState
@@ -56,9 +74,11 @@ router.back(); // window.history.back();
 router.forward(); // window.history.forward();
 ```
 
+[In depth documentation](/docs/router.md)
+
 ## Configuration
 
-The router takes an optional object as an argument that allows it to override default configuration and customize the behavior of the router.
+The router takes an optional object as an argument that allows it to override default [configuration](/docs/router-config.md) and customize the behavior of the router.
 
 ```js
 var router = new Router({
