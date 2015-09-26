@@ -27,6 +27,8 @@
     "func-names": 0,
     "vars-on-top": 0,
     "no-else-return": 0,
-    "new-cap": 0
+    "new-cap": 0,
+    "id-length": 0,
+    "comma-dangle": 0
   }
 }
