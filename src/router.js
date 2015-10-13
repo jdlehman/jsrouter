@@ -1,4 +1,3 @@
-import window from 'window';
 import Recognizer from 'route-recognizer';
 import {
   defaultUnrecognizedRouteHandler,

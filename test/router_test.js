@@ -1,7 +1,6 @@
 import {assert} from 'chai';
 import sinon from 'sinon';
 import Router from 'router';
-import window from 'window';
 
 describe('Router', function() {
   describe('#addHandler', function() {

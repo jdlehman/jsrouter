@@ -12,11 +12,6 @@ module.exports = {
     libraryTarget: 'umd',
     library: 'jsrouter'
   },
-  externals: [
-    {
-      "window": "window"
-    }
-  ],
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
