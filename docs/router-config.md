@@ -48,8 +48,8 @@ The default behavior when the hash changes is to call the leave handler and then
 
 ```js
 function routeChange(ev) {
-  var oldPath = pathFromURL(e.oldURL);
-  var newPath = pathFromURL(e.newURL);
+  var oldPath = pathFromURL(ev.oldURL);
+  var newPath = pathFromURL(ev.newURL);
 
   console.log(`Going from ${oldPath} to ${newPath}`);
 }
