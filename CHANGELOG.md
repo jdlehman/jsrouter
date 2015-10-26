@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 (2015-10-26)
+
+Added:
+
+- Added optional `options` argument to `navigate` function. Supports `trigger` option that forces `handleRouteChange` to be called even if the route has not changed. [5e2f120](../../commit/5e2f120)
+
 ## 0.2.0 (2015-10-12)
 
 Changed:
