@@ -44,8 +44,9 @@ export default class Router {
     return pathFromURL(window.location.hash.split('?')[0]);
   }
 
-  navigate(path, state = this.navigateState()) {
+  navigate(path, state = this.navigateState(), options = {}) {
     var newPath;
+    var current = window.location.hash;
     if (!hasLeadingSlash(path)) {
       newPath = `#${this.currentPath()}${path}`;
     } else {
@@ -53,6 +54,13 @@ export default class Router {
     }
     window.location.hash = newPath;
     window.history.replaceState(state, '', newPath);
+    if (options.trigger && current === newPath) {
+      this.handleRouteChange({
+        type: 'hashchange',
+        oldURL: newPath,
+        newURL: newPath
+      });
+    }
   }
 
   back() {
