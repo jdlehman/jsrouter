@@ -61,6 +61,19 @@ describe('Router', function() {
       router.navigate('end');
       assert.equal(window.location.hash, '#/startingRoute/more/end');
     });
+
+    describe('options', function() {
+      it('trigger option calls handleRouteChange even if route has not changed', function() {
+        var handleRouteChangeSpy = sinon.spy();
+        var router = new Router({
+          handleRouteChange: handleRouteChangeSpy
+        });
+        window.location.hash = '/test';
+        router.navigate('/test', {}, {trigger: true});
+        assert.equal(window.location.hash, '#/test');
+        sinon.assert.called(handleRouteChangeSpy);
+      });
+    });
   });
 
   describe('#back', function() {
