@@ -8,7 +8,7 @@
 
 ## Installation
 
-`npm install jsrouter`
+`npm install --save jsrouter`
 
 ## Usage
 
