@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.0 (2015-10-30)
+
+Added:
+
+- Added new lifecycle hooks `beforeRouteChange` and `afterRouteChange` that are called before the `leave` handler and `after` the enter handler respectively. [4f2eba7](../../commit/4f2eba7)
+- Added `persistState` configuration instead of always using `window.history.replaceState`. `replaceState` is still the default, but now `pushState` or another function can be used in its stead. [ef57f12](../../commit/ef57f12)
+
+Fixed:
+
+- Bug where default route change behavior could be overridden with `handleRouteChange` config hook. [4f2eba7](../../commit/4f2eba7)
+- Bug where `enter` route handler was not called on load. [52067c4](../../commit/52067c4)
+
+Breaking Changes:
+
+- Removed `handleRouteChange` hook as using it caused the router to not work. Use `beforeRouteChange` and `afterRouteChange` hooks instead. [4f2eba7](../../commit/4f2eba7)
+
 ## 0.3.0 (2015-10-26)
 
 Added:
