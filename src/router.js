@@ -23,7 +23,7 @@ function handleRouteChange(e) {
   this.handleAfterChange(oldPath, newPath);
 }
 
-function handleLoad(e) {
+function handleLoadEvent(e) {
   defaultLoad.call(this, e.target.URL);
   this.handleLoad(e);
 }
@@ -35,7 +35,7 @@ export default class Router {
     handlePopState = noop,
     navigateState = defaultNavigateState,
     handleBeforeChange = noop,
-    handleAfterChange = noop,
+    handleAfterChange = noop
   } = {}) {
     this.recognizer = new Recognizer();
     this.handlers = {};
@@ -52,7 +52,7 @@ export default class Router {
   }
 
   start() {
-    window.addEventListener('load', handleLoad.bind(this));
+    window.addEventListener('load', handleLoadEvent.bind(this));
     window.addEventListener('popstate', ::this.handlePopState);
     window.addEventListener('hashchange', handleRouteChange.bind(this));
   }
