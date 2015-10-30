@@ -65,9 +65,11 @@ describe('Router', function() {
     describe('options', function() {
       it('trigger option calls handleRouteChange even if route has not changed', function() {
         var handleRouteChangeSpy = sinon.spy();
-        var router = new Router({
-          handleRouteChange: handleRouteChangeSpy
+        var router = new Router({handleBeforeChange: handleRouteChangeSpy});
+        router.map(function(match) {
+          match('/test').to('test');
         });
+        router.addHandler('test', {});
         window.location.hash = '/test';
         router.navigate('/test', {}, {trigger: true});
         assert.equal(window.location.hash, '#/test');

@@ -1,27 +1,46 @@
 import Recognizer from 'route-recognizer';
 import {
   defaultUnrecognizedRouteHandler,
-  defaultHandleRouteChange,
   defaultNavigateState
 } from './defaultHandlers';
 import {
   hasLeadingSlash,
-  pathFromURL
+  pathFromURL,
+  recognizeAndCallHandler,
+  noop
 } from './utils';
 
-function noop() {}
+function handleRouteChange(e) {
+  var oldPath = pathFromURL(e.oldURL);
+  var newPath = pathFromURL(e.newURL);
+  // call leave handlers
+  this.handleBeforeChange(oldPath, newPath);
+  recognizeAndCallHandler.call(this, oldPath, newPath, 'leave');
+
+  // call enter handlers
+  recognizeAndCallHandler.call(this, newPath, oldPath, 'enter');
+  this.handleAfterChange(oldPath, newPath);
+}
 
 export default class Router {
-  constructor(config = {}) {
+  constructor({
+    unrecognizedRouteHandler = defaultUnrecognizedRouteHandler.bind(this),
+    handleLoad = noop,
+    handlePopState = noop,
+    navigateState = defaultNavigateState,
+    handleBeforeChange = noop,
+    handleAfterChange = noop,
+  } = {}) {
     this.recognizer = new Recognizer();
     this.handlers = {};
 
     // handle config
-    this.unrecognizedRouteHandler = config.unrecognizedRouteHandler || defaultUnrecognizedRouteHandler;
-    this.handleLoad = config.handleLoad || noop;
-    this.handleRouteChange = config.handleRouteChange || defaultHandleRouteChange;
-    this.handlePopState = config.handlePopState || noop;
-    this.navigateState = config.navigateState || defaultNavigateState;
+    this.unrecognizedRouteHandler = unrecognizedRouteHandler;
+    this.handleLoad = handleLoad;
+    this.handlePopState = handlePopState;
+    this.navigateState = navigateState;
+    this.handleBeforeChange = handleBeforeChange;
+    this.handleAfterChange = handleAfterChange;
 
     this.start();
   }
@@ -29,7 +48,7 @@ export default class Router {
   start() {
     window.addEventListener('load', ::this.handleLoad);
     window.addEventListener('popstate', ::this.handlePopState);
-    window.addEventListener('hashchange', ::this.handleRouteChange);
+    window.addEventListener('hashchange', handleRouteChange.bind(this));
   }
 
   addHandler(name, handler) {
@@ -55,7 +74,7 @@ export default class Router {
     window.location.hash = newPath;
     window.history.replaceState(state, '', newPath);
     if (options.trigger && current === newPath) {
-      this.handleRouteChange({
+      handleRouteChange.call(this, {
         type: 'hashchange',
         oldURL: newPath,
         newURL: newPath
