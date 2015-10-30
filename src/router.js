@@ -1,18 +1,19 @@
 import Recognizer from 'route-recognizer';
 import {
   defaultUnrecognizedRouteHandler,
-  defaultNavigateState
+  defaultNavigateState,
+  defaultLoad
 } from './defaultHandlers';
 import {
   hasLeadingSlash,
-  pathFromURL,
+  pathFromHash,
   recognizeAndCallHandler,
   noop
 } from './utils';
 
 function handleRouteChange(e) {
-  var oldPath = pathFromURL(e.oldURL);
-  var newPath = pathFromURL(e.newURL);
+  var oldPath = pathFromHash(e.oldURL);
+  var newPath = pathFromHash(e.newURL);
   // call leave handlers
   this.handleBeforeChange(oldPath, newPath);
   recognizeAndCallHandler.call(this, oldPath, newPath, 'leave');
@@ -20,6 +21,11 @@ function handleRouteChange(e) {
   // call enter handlers
   recognizeAndCallHandler.call(this, newPath, oldPath, 'enter');
   this.handleAfterChange(oldPath, newPath);
+}
+
+function handleLoad(e) {
+  defaultLoad.call(this, e.target.URL);
+  this.handleLoad(e);
 }
 
 export default class Router {
@@ -46,7 +52,7 @@ export default class Router {
   }
 
   start() {
-    window.addEventListener('load', ::this.handleLoad);
+    window.addEventListener('load', handleLoad.bind(this));
     window.addEventListener('popstate', ::this.handlePopState);
     window.addEventListener('hashchange', handleRouteChange.bind(this));
   }
@@ -60,7 +66,7 @@ export default class Router {
   }
 
   currentPath() {
-    return pathFromURL(window.location.hash.split('?')[0]);
+    return pathFromHash(window.location.hash.split('?')[0]);
   }
 
   navigate(path, state = this.navigateState(), options = {}) {

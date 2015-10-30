@@ -10,7 +10,7 @@ export function ensureTrailingSlash(path) {
   return path.slice(-1) !== '/' ? `${path}/` : path;
 }
 
-export function pathFromURL(url) {
+export function pathFromHash(url) {
   return ensureTrailingSlash(
     ensureLeadingSlash(url.split('#')[1] || '/')
   );

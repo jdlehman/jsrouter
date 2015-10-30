@@ -3,7 +3,7 @@ import {
   hasLeadingSlash,
   ensureLeadingSlash,
   ensureTrailingSlash,
-  pathFromURL
+  pathFromHash
 } from 'utils';
 
 describe('utils', function() {
@@ -47,28 +47,28 @@ describe('utils', function() {
     });
   });
 
-  describe('pathFromURL', function() {
+  describe('pathFromHash', function() {
     it('returns the path after hash from url', function() {
       var path = 'www.example.com/site/#/path/here';
-      var newPath = pathFromURL(path);
+      var newPath = pathFromHash(path);
       assert.equal(newPath, '/path/here/');
     });
 
     it('returns root if nothing after hash', function() {
       var path = 'www.example.com/site/#';
-      var newPath = pathFromURL(path);
+      var newPath = pathFromHash(path);
       assert.equal(newPath, '/');
     });
 
     it('ensures leading slash', function() {
       var path = 'www.example.com/site/#path/';
-      var newPath = pathFromURL(path);
+      var newPath = pathFromHash(path);
       assert.equal(newPath, '/path/');
     });
 
     it('ensures trailing slash', function() {
       var path = 'www.example.com/site/#/path';
-      var newPath = pathFromURL(path);
+      var newPath = pathFromHash(path);
       assert.equal(newPath, '/path/');
     });
   });
