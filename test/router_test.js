@@ -3,6 +3,27 @@ import sinon from 'sinon';
 import Router from 'router';
 
 describe('Router', function() {
+  describe('config', function() {
+    describe('persistState', function() {
+      it('defaults to window.history.replaceState', function() {
+        var persistSpy = sinon.spy(window.history, 'replaceState');
+        var router = new Router();
+        router.navigate('/');
+        sinon.assert.calledOnce(persistSpy);
+        persistSpy.restore();
+      });
+
+      it('calls user defined function', function() {
+        var persistSpy = sinon.spy();
+        var router = new Router({
+          persistState: persistSpy
+        });
+        router.navigate('/');
+        sinon.assert.calledOnce(persistSpy);
+      });
+    });
+  });
+
   describe('#addHandler', function() {
     it('adds the handler to handlers object', function() {
       var router = new Router();
