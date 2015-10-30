@@ -35,7 +35,8 @@ export default class Router {
     handlePopState = noop,
     navigateState = defaultNavigateState,
     handleBeforeChange = noop,
-    handleAfterChange = noop
+    handleAfterChange = noop,
+    persistState = (...args) => window.history.replaceState(...args)
   } = {}) {
     this.recognizer = new Recognizer();
     this.handlers = {};
@@ -47,6 +48,7 @@ export default class Router {
     this.navigateState = navigateState;
     this.handleBeforeChange = handleBeforeChange;
     this.handleAfterChange = handleAfterChange;
+    this.persistState = persistState;
 
     this.start();
   }
@@ -78,7 +80,7 @@ export default class Router {
       newPath = `#${path}`;
     }
     window.location.hash = newPath;
-    window.history.replaceState(state, '', newPath);
+    this.persistState(state, '', newPath);
     if (options.trigger && current === newPath) {
       handleRouteChange.call(this, {
         type: 'hashchange',

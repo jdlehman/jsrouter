@@ -16,7 +16,9 @@ The above will create a router with the default configuration. The `Router` cons
 
 ### unrecognizedRouteHandler
 
-The default behavior when a route is not recognized is to navigate to `/`. We can override this behavior with the `unrecognizedRouteHandler` config option. This function receives the `currentPath`, the `lastOrNextPath` (the last path if the router is entering a new route, and the next path if the router is leaving a route), and the `handlerName` as arguments.
+> (currentPath: string, lastOrNextPath: string, handlerName: string)
+
+The default behavior when a route is not recognized is to navigate to `/`. We can override this behavior with the `unrecognizedRouteHandler` config option. This function receives the `currentPath`, the `lastOrNextPath` (the last path if the router is entering a new route, and the next path if the router is leaving a route), and the `handlerName` ("enter" or "leave") as arguments.
 
 ```js
 function myHandler(path, lastOrNextPath, handlerName) {
@@ -30,6 +32,8 @@ var router = new Router({
 
 ### handleLoad
 
+> (loadEvent: object)
+
 The `handleLoad` option provides an optional function to be define that is called on the browser's `onLoad` event.
 
 ```js
@@ -42,26 +46,41 @@ var router = new Router({
 });
 ```
 
-### Route Change lifecycle hooks
+### beforeRouteChange
 
-When the hash changes the leave handler is called and then the enter handler is called. The before and after config options, `handleBeforeChange` and `handleAfterChange` respectively, can be used to perform extra logic during this behavior. These functions receive the old url and the new url as arguments and are called before enter and after leave.
+> (oldPath: string, newPath: string)
+
+Called before the `leave` handler is called during a route change. See the route change [lifecycle](./lifecycle.md) for more details.
 
 ```js
 function beforeRouteChange(oldPath, newPath) {
   console.log(`Going from ${oldPath} to ${newPath}`);
 }
 
+var router = new Router({
+  handleBeforeChange: beforeRouteChange
+});
+```
+
+### afterRouteChange
+
+> (oldPath: string, newPath: string)
+
+Called after the `enter` handler is called during a route change. See the route change [lifecycle](./lifecycle.md) for more details.
+
+```js
 function afterRouteChange(oldPath, newPath) {
   console.log(`Went from ${oldPath} to ${newPath}`);
 }
 
 var router = new Router({
-  handleBeforeChange: beforeRouteChange,
-  handleAfterChange: afterRouteChange
+  afterBeforeChange: afterRouteChange
 });
 ```
 
 ### handlePopState
+
+> (popStateEvent: object)
 
 The `handlePopState` config option provides an optional function to be called on the browser's `popstate` event. This function takes the event object from the `popstate` event as an argument. There is no default behavior in the router for `popstate`.
 
@@ -79,9 +98,11 @@ var router = new Router({
 
 ### navigateState
 
-The `navigateState` config option is a function that returns data to be used as the state in `window.history.replaceState` (which is called whenever the router navigates to a new route). The default behavior returns an empty object, `{}`, but can be overridden with this config option.
+> (): state: any
 
-You can serialize your application state with `navigateState` and restore the state with [`handlePopState`](#handlepopstate) to get undo/redo functionality for your app with the browser's back/forward.
+The `navigateState` config option is a function that returns data to be used as the state in [`persistState`](#persiststate), which is called whenever the router navigates to a new route. The default behavior returns an empty object, `{}`, but can be overridden with this config option.
+
+If you set `persistState` to `window.history.pushState`, you can serialize your application state with `navigateState` and restore the state with [`handlePopState`](#handlepopstate) to get undo/redo functionality for your app with the browser's back/forward.
 
 ```js
 function myState(ev) {
@@ -92,3 +113,9 @@ var router = new Router({
   navigateState: myState
 });
 ```
+
+### persistState
+
+> (state: any, '', newPath: string)
+
+The `persistState` config option is a function called whenever [`Router#navigate`](./router.md#navigate) is called. It defaults to [`window.history.replaceState`](https://developer.mozilla.org/en-US/docs/Web/API/History_API), though you may want to use `window.history.pushState` or your own function instead. This function conforms to the `pushState`/`replaceState` API and receives the state defined by [`navigateState`](#navigatestate) an empty string and the new path as a string.
