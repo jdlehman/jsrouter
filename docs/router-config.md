@@ -44,16 +44,14 @@ var router = new Router({
 
 ### Route Change lifecycle hooks
 
-When the hash changes the leave handler is called and then the enter handler is called. The before and after config options can be used to perform extra logic during this behavior. These functions receive the old url and the new url as arguments and are called before enter and after leave.
+When the hash changes the leave handler is called and then the enter handler is called. The before and after config options, `handleBeforeChange` and `handleAfterChange` respectively, can be used to perform extra logic during this behavior. These functions receive the old url and the new url as arguments and are called before enter and after leave.
 
 ```js
 function beforeRouteChange(oldPath, newPath) {
-
   console.log(`Going from ${oldPath} to ${newPath}`);
 }
 
 function afterRouteChange(oldPath, newPath) {
-
   console.log(`Went from ${oldPath} to ${newPath}`);
 }
 
