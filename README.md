@@ -19,7 +19,7 @@ npm install --save jsrouter
 While the `npm` package is recommended for production usage, if you just want to drop a `<script>` tag on your page you can also use the UMD/global build hosted on [`npmcdn`](https://npmcdn.com/jsrouter).
 
 ```html
-<script src="https://npmcdn.com/jsrouter@0.4.0"></script>
+<script src="https://npmcdn.com/jsrouter@0.5.0"></script>
 ```
 
 ## Usage
