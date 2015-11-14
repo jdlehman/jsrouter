@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+Fixed:
+
+- `unrecognizedRouteHandler` is now only called when a route is being entered, not when it is left. This prevents the handler from being called twice on unrecognized routes. [579e27a](../../commit/579e27a)
+
 ## 0.4.0 (2015-10-30)
 
 Added:
