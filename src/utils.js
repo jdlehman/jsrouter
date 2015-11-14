@@ -21,7 +21,10 @@ export function noop() {}
 export function recognizeAndCallHandler(path, lastOrNextPath, handlerName) {
   var pathHandlers = this.recognizer.recognize(path);
   if (!pathHandlers) {
-    this.unrecognizedRouteHandler(path, lastOrNextPath, handlerName);
+    // only call unrecognized route handler on enter
+    if (handlerName === 'enter') {
+      this.unrecognizedRouteHandler(path, lastOrNextPath, handlerName);
+    }
   } else {
     for (var i = 0; i < pathHandlers.length; i++) {
       var result = pathHandlers[i];
