@@ -97,4 +97,11 @@ export default class Router {
   forward() {
     window.history.forward();
   }
+
+  pop() {
+    var matches = this.currentPath().match(/(.+)(?:\/.+\/?)/);
+    if (matches) {
+      this.navigate(`${matches[1]}/`);
+    }
+  }
 }

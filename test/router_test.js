@@ -116,4 +116,34 @@ describe('Router', function() {
       sinon.assert.calledOnce(historySpy);
     });
   });
+
+  describe('#pop', function() {
+    beforeEach(function() {
+      this.router = new Router();
+      this.navigateSpy = sinon.spy(this.router, 'navigate');
+    });
+
+    afterEach(function() {
+      this.router.currentPath.restore();
+      this.router.navigate.restore();
+    });
+
+    it('does nothing when currentPath is not nested', function() {
+      sinon.stub(this.router, 'currentPath').returns('/foo/');
+      this.router.pop();
+      sinon.assert.notCalled(this.router.navigate);
+    });
+
+    it('calls #navigate with the parent path when currentPath is nested', function() {
+      sinon.stub(this.router, 'currentPath').returns('/foo/bar/');
+      this.router.pop();
+      sinon.assert.calledWith(this.router.navigate, '/foo/');
+    });
+
+    it('does nothing when currentPath is the root path', function() {
+      sinon.stub(this.router, 'currentPath').returns('/');
+      this.router.pop();
+      sinon.assert.notCalled(this.router.navigate);
+    });
+  });
 });
