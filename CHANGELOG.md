@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+Added:
+
+- Add `pop` method to router that navigates to a new route found by popping off the last segment of the route. eg. `/route1/route2/` pops to `/route1/`. [312b1b7](../../commit/312b1b7)
+
 ## 0.5.0
 
 Fixed:
