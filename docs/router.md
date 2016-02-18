@@ -92,3 +92,14 @@ Calls `window.history.forward`
 ```js
 router.forward();
 ```
+
+## pop
+
+> (): undefined
+
+Calls `navigate` with the currentPath without its final element. For example, if the
+currentPath is `/foo/bar/`, then it could call `navigate('/foo/')`.
+
+```js
+router.pop();
+```
