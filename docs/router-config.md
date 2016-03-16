@@ -74,7 +74,7 @@ function afterRouteChange(oldPath, newPath) {
 }
 
 var router = new Router({
-  afterBeforeChange: afterRouteChange
+  handleAfterChange: afterRouteChange
 });
 ```
 
