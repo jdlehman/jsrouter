@@ -1,8 +1,7 @@
 import Recognizer from 'route-recognizer';
 import {
   defaultUnrecognizedRouteHandler,
-  defaultNavigateState,
-  defaultLoad
+  defaultNavigateState
 } from './defaultHandlers';
 import {
   hasLeadingSlash,
@@ -24,7 +23,7 @@ function handleRouteChange(e) {
 }
 
 function handleLoadEvent(e) {
-  defaultLoad.call(this, e.target.URL);
+  recognizeAndCallHandler.call(this, pathFromHash(e.target.URL), undefined, 'enter');
   this.handleLoad(e);
 }
 

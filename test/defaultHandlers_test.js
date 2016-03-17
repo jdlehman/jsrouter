@@ -23,16 +23,4 @@ describe('defaultHandlers', function() {
       assert.deepEqual(defaultNavigateState(), {});
     });
   });
-
-  describe('defaultLoad', function() {
-    it('calls navigate on the current path', function() {
-      var router = new Router();
-      var navigateSpy = sinon.spy(router, 'navigate');
-      var navigateStateStub = sinon.stub(router, 'navigateState').returns('data');
-      defaultLoad.call(router, '#/test');
-      sinon.assert.calledWith(navigateSpy, '/test/', 'data', {trigger: true});
-      navigateSpy.restore();
-      navigateStateStub.restore();
-    });
-  });
 });
