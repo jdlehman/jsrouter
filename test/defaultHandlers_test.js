@@ -3,8 +3,7 @@ import sinon from 'sinon';
 import Router from 'router';
 import {
   defaultUnrecognizedRouteHandler,
-  defaultNavigateState,
-  defaultLoad
+  defaultNavigateState
 } from 'defaultHandlers';
 
 describe('defaultHandlers', function() {
