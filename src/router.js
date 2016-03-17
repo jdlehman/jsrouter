@@ -29,15 +29,27 @@ function handleLoadEvent(e) {
 }
 
 export default class Router {
-  constructor({
-    unrecognizedRouteHandler = defaultUnrecognizedRouteHandler.bind(this),
-    handleLoad = noop,
-    handlePopState = noop,
-    navigateState = defaultNavigateState,
-    handleBeforeChange = noop,
-    handleAfterChange = noop,
-    persistState = (...args) => window.history.replaceState(...args)
-  } = {}) {
+  constructor(config) {
+    const defaults = {
+      unrecognizedRouteHandler: defaultUnrecognizedRouteHandler.bind(this),
+      handleLoad: noop,
+      handlePopState: noop,
+      navigateState: defaultNavigateState,
+      handleBeforeChange: noop,
+      handleAfterChange: noop,
+      persistState: (...args) => window.history.replaceState(...args)
+    };
+
+    const {
+      unrecognizedRouteHandler,
+      handleLoad,
+      handlePopState,
+      navigateState,
+      handleBeforeChange,
+      handleAfterChange,
+      persistState
+    } = {...defaults, ...config};
+
     this.recognizer = new Recognizer();
     this.handlers = {};
 
