@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+Fixed:
+
+- Call enter handler on load, but not by calling navigate as that causes issues in edge cases. [e2465c7](../../commit/e2465c7)
+
 ## 0.6.0
 
 Added:
