@@ -18,29 +18,32 @@ export function pathFromHash(url) {
 
 export function noop() {}
 
+function createHandlerArgs(handlerName, queryParams, lastOrNextPath) {
+  if (handlerName === 'enter') {
+    return {lastPath: lastOrNextPath, queryParams};
+  } else {
+    return {nextPath: lastOrNextPath, queryParams};
+  }
+}
+
 export function recognizeAndCallHandler(path, lastOrNextPath, handlerName) {
-  var pathHandlers = this.recognizer.recognize(path);
+  const pathHandlers = this.recognizer.recognize(path);
   if (!pathHandlers) {
     // only call unrecognized route handler on enter
     if (handlerName === 'enter') {
       this.unrecognizedRouteHandler(path, lastOrNextPath, handlerName);
     }
   } else {
-    for (var i = 0; i < pathHandlers.length; i++) {
-      var result = pathHandlers[i];
-      var queryParams = pathHandlers.queryParams;
-      var params = result.params;
-      var handlerObj = this.handlers[result.handler];
-      var handler = handlerObj && handlerObj[handlerName];
+    const queryParams = pathHandlers.queryParams;
+    const handlerArgs = createHandlerArgs(handlerName, queryParams, lastOrNextPath);
+    for (let i = 0; i < pathHandlers.length; i++) {
+      const result = pathHandlers[i];
+      const params = result.params;
+      const handlerObj = this.handlers[result.handler];
+      const handler = handlerObj && handlerObj[handlerName];
 
       if (typeof handler === 'function') {
-        var handlerArgs = {path, queryParams, params};
-        if (handlerName === 'enter') {
-          handlerArgs.lastPath = lastOrNextPath;
-        } else {
-          handlerArgs.nextPath = lastOrNextPath;
-        }
-        handler(handlerArgs);
+        handler({...handlerArgs, path, params});
       }
     }
   }

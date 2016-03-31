@@ -11,8 +11,8 @@ import {
 } from './utils';
 
 function handleRouteChange(e) {
-  var oldPath = pathFromHash(e.oldURL);
-  var newPath = pathFromHash(e.newURL);
+  const oldPath = pathFromHash(e.oldURL);
+  const newPath = pathFromHash(e.newURL);
   // call leave handlers
   this.handleBeforeChange(oldPath, newPath);
   recognizeAndCallHandler.call(this, oldPath, newPath, 'leave');
@@ -66,7 +66,7 @@ export default class Router {
 
   start() {
     window.addEventListener('load', handleLoadEvent.bind(this));
-    window.addEventListener('popstate', ::this.handlePopState);
+    window.addEventListener('popstate', this.handlePopState.bind(this));
     window.addEventListener('hashchange', handleRouteChange.bind(this));
   }
 
@@ -83,8 +83,8 @@ export default class Router {
   }
 
   navigate(path, state = this.navigateState(), options = {}) {
-    var newPath;
-    var current = window.location.hash;
+    let newPath;
+    const current = window.location.hash;
     if (!hasLeadingSlash(path)) {
       newPath = `#${this.currentPath()}${path}`;
     } else {
@@ -110,7 +110,7 @@ export default class Router {
   }
 
   pop() {
-    var matches = this.currentPath().match(/(.+)(?:\/.+\/?)/);
+    const matches = this.currentPath().match(/(.+)(?:\/.+\/?)/);
     if (matches) {
       this.navigate(`${matches[1]}/`);
     }
