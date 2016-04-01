@@ -9,8 +9,8 @@ import {
 describe('defaultHandlers', function() {
   describe('defaultUnrecognizedRouteHandler', function() {
     it('navigates to the root', function() {
-      var router = new Router();
-      var navigateSpy = sinon.spy(router, 'navigate');
+      const router = new Router();
+      const navigateSpy = sinon.spy(router, 'navigate');
       defaultUnrecognizedRouteHandler.call(router);
       sinon.assert.calledWith(navigateSpy, '/');
       navigateSpy.restore();

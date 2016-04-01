@@ -1,4 +1,4 @@
-export function defaultUnrecognizedRouteHandler(path, lastOrNextPath, handlerName) {
+export function defaultUnrecognizedRouteHandler(lastPath, path) {
   this.navigate('/');
 }
 

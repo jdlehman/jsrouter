@@ -6,25 +6,43 @@ import {
 import {
   hasLeadingSlash,
   pathFromHash,
-  recognizeAndCallHandler,
+  callHandlers,
+  getHandlers,
+  getFlattenedHandlerArgs,
   noop
 } from './utils';
 
 function handleRouteChange(e) {
   const oldPath = pathFromHash(e.oldURL);
   const newPath = pathFromHash(e.newURL);
+
+  const leavePaths = {path: oldPath, nextPath: newPath};
+  const enterPaths = {lastPath: oldPath, path: newPath};
+  const leaveHandlers = getHandlers(this.handlers, this.recognizer, leavePaths, 'leave');
+  const enterHandlers = getHandlers(this.handlers, this.recognizer, enterPaths, 'enter');
+  const leaveArgs = getFlattenedHandlerArgs(leaveHandlers, leavePaths);
+  const enterArgs = getFlattenedHandlerArgs(enterHandlers, enterPaths);
+
   // call leave handlers
-  this.handleBeforeChange(oldPath, newPath);
-  recognizeAndCallHandler.call(this, oldPath, newPath, 'leave');
+  this.handleBeforeChange(leaveArgs);
+  leaveHandlers && callHandlers(leaveHandlers);
 
   // call enter handlers
-  recognizeAndCallHandler.call(this, newPath, oldPath, 'enter');
-  this.handleAfterChange(oldPath, newPath);
+  enterHandlers ? callHandlers(enterHandlers) : this.unrecognizedRouteHandler(oldPath, newPath);
+  this.handleAfterChange(enterArgs);
 }
 
 function handleLoadEvent(e) {
-  recognizeAndCallHandler.call(this, pathFromHash(e.target.URL), undefined, 'enter');
+  const path = pathFromHash(e.target.URL);
+  const enterHandlers = getHandlers(this.handlers, this.recognizer, {lastPath: undefined, path}, 'enter');
+  enterHandlers && callHandlers(enterHandlers);
   this.handleLoad(e);
+}
+
+function registerListeners() {
+  window.addEventListener('load', handleLoadEvent.bind(this));
+  window.addEventListener('popstate', this.handlePopState);
+  window.addEventListener('hashchange', handleRouteChange.bind(this));
 }
 
 export default class Router {
@@ -61,13 +79,7 @@ export default class Router {
     this.handleAfterChange = handleAfterChange;
     this.persistState = persistState;
 
-    this.start();
-  }
-
-  start() {
-    window.addEventListener('load', handleLoadEvent.bind(this));
-    window.addEventListener('popstate', this.handlePopState.bind(this));
-    window.addEventListener('hashchange', handleRouteChange.bind(this));
+    registerListeners.call(this);
   }
 
   addHandler(name, handler) {
