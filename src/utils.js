@@ -18,30 +18,48 @@ export function pathFromHash(url) {
 
 export function noop() {}
 
-export function recognizeAndCallHandler(path, lastOrNextPath, handlerName) {
-  var pathHandlers = this.recognizer.recognize(path);
-  if (!pathHandlers) {
-    // only call unrecognized route handler on enter
-    if (handlerName === 'enter') {
-      this.unrecognizedRouteHandler(path, lastOrNextPath, handlerName);
-    }
-  } else {
-    for (var i = 0; i < pathHandlers.length; i++) {
-      var result = pathHandlers[i];
-      var queryParams = pathHandlers.queryParams;
-      var params = result.params;
-      var handlerObj = this.handlers[result.handler];
-      var handler = handlerObj && handlerObj[handlerName];
+function trimQueryParams(path) {
+  return path.split('?')[0];
+}
 
-      if (typeof handler === 'function') {
-        var handlerArgs = {path, queryParams, params};
-        if (handlerName === 'enter') {
-          handlerArgs.lastPath = lastOrNextPath;
-        } else {
-          handlerArgs.nextPath = lastOrNextPath;
-        }
-        handler(handlerArgs);
-      }
-    }
+function sanitizePaths(paths, queryParams) {
+  const sanitizedPaths = {};
+  Object.keys(paths).forEach(key => {
+    sanitizedPaths[key] = trimQueryParams(paths[key]);
+  });
+  return sanitizedPaths;
+}
+
+export function getHandlers(allHandlers, recognizer, pathArgs, handlerName) {
+  const recognizedHandlers = recognizer.recognize(pathArgs.path);
+  if (!recognizedHandlers) { return null; }
+  const handlers = [];
+  const handlerArgs = {...sanitizePaths(pathArgs), queryParams: recognizedHandlers.queryParams};
+  for (let i = 0; i < recognizedHandlers.length; i++) {
+    const handlerData = recognizedHandlers[i];
+    const params = handlerData.params;
+    const handler = allHandlers[handlerData.handler];
+    const handlerFunc = handler && handler[handlerName];
+    const args = {...handlerArgs, params};
+    handlers.push({handler: handlerFunc, args});
   }
+  return handlers;
+}
+
+export function callHandlers(handlers) {
+  handlers.forEach(({handler, args}) => {
+    if (typeof handler === 'function') {
+      handler(args);
+    }
+  });
+}
+
+export function getFlattenedHandlerArgs(handlers, startingArgs) {
+  if (!handlers) { return startingArgs; }
+  const args = handlers[0].args;
+  const flattenedParams = handlers
+    .reduce((mergedParams, {args: {params}}) => {
+      return {...mergedParams, ...params};
+    }, {});
+  return {...args, params: flattenedParams};
 }

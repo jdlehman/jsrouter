@@ -16,9 +16,9 @@ The above will create a router with the default configuration. The `Router` cons
 
 ### unrecognizedRouteHandler
 
-> (currentPath: string, lastOrNextPath: string, handlerName: string)
+> (lastPath: string, path: string)
 
-The default behavior when a route is not recognized is to navigate to `/`. We can override this behavior with the `unrecognizedRouteHandler` config option. This function receives the `currentPath`, the `lastOrNextPath` (the last path if the router is entering a new route, and the next path if the router is leaving a route), and the `handlerName` ("enter" or "leave") as arguments.
+The default behavior when a route is not recognized is to navigate to `/`. We can override this behavior with the `unrecognizedRouteHandler` config option. This function receives the `path` and the `lastPath`.
 
 ```js
 function myHandler(path, lastOrNextPath, handlerName) {
@@ -46,15 +46,15 @@ var router = new Router({
 });
 ```
 
-### beforeRouteChange
+### handleBeforeChange
 
-> (oldPath: string, newPath: string)
+> (object: {path: string, nextPath: string, queryParams: object, params: object})
 
-Called before the `leave` handler is called during a route change. See the route change [lifecycle](./lifecycle.md) for more details.
+Called before the `leave` handler is called during a route change. See the route change [lifecycle](./lifecycle.md) for more details. If the route is invalid (does not match a defined route), `queryParams` and `params` will not exist. Invalid routes should be handled by [`unrecognizedRouteHandler`](#unrecognizedroutehandler).
 
 ```js
-function beforeRouteChange(oldPath, newPath) {
-  console.log(`Going from ${oldPath} to ${newPath}`);
+function beforeRouteChange({path, nextPath, queryParams, params}) {
+  console.log(`Going from ${path} to ${nextPath}`);
 }
 
 var router = new Router({
@@ -62,15 +62,15 @@ var router = new Router({
 });
 ```
 
-### afterRouteChange
+### handleAfterChange
 
-> (oldPath: string, newPath: string)
+> (object: {path: string, lastPath: string, queryParams: object, params: object})
 
-Called after the `enter` handler is called during a route change. See the route change [lifecycle](./lifecycle.md) for more details.
+Called after the `enter` handler is called during a route change. See the route change [lifecycle](./lifecycle.md) for more details. If the route is invalid (does not match a defined route), `queryParams` and `params` will not exist. Invalid routes should be handled by [`unrecognizedRouteHandler`](#unrecognizedroutehandler).
 
 ```js
-function afterRouteChange(oldPath, newPath) {
-  console.log(`Went from ${oldPath} to ${newPath}`);
+function afterRouteChange({path, lastPath, queryParams, params}) {
+  console.log(`Went from ${lastPath} to ${path}`);
 }
 
 var router = new Router({

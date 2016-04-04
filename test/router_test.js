@@ -6,16 +6,16 @@ describe('Router', function() {
   describe('config', function() {
     describe('persistState', function() {
       it('defaults to window.history.replaceState', function() {
-        var persistSpy = sinon.spy(window.history, 'replaceState');
-        var router = new Router();
+        const persistSpy = sinon.spy(window.history, 'replaceState');
+        const router = new Router();
         router.navigate('/');
         sinon.assert.calledOnce(persistSpy);
         persistSpy.restore();
       });
 
       it('calls user defined function', function() {
-        var persistSpy = sinon.spy();
-        var router = new Router({
+        const persistSpy = sinon.spy();
+        const router = new Router({
           persistState: persistSpy
         });
         router.navigate('/');
@@ -26,58 +26,73 @@ describe('Router', function() {
 
   describe('#addHandler', function() {
     it('adds the handler to handlers object', function() {
-      var router = new Router();
-      var handlerName = 'handlerName';
-      var handler = 'handler';
+      const router = new Router();
+      const handlerName = 'handlerName';
+      const handler = 'handler';
       router.addHandler(handlerName, handler);
       assert.equal(router.handlers[handlerName], handler);
+    });
+  });
+
+  describe('#map', function() {
+    it('delegates to route-recognizer#map', function() {
+      const router = new Router();
+      const recognizerStub = sinon.stub(router.recognizer, 'map');
+      router.map(match => {
+        match('pathOne').to('oneHandler', matchh => {
+          matchh('nestedOne').to('nestedOneHandler');
+        });
+        match('pathTwo').to('twoHandler');
+      });
+      sinon.assert.calledOnce(recognizerStub);
+      recognizerStub.restore();
     });
   });
 
   describe('#currentPath', function() {
     it('gets the current path', function() {
       window.location.hash = '/myPath/rocks';
-      var router = new Router();
+      const router = new Router();
       assert.equal(router.currentPath(), '/myPath/rocks/');
     });
 
     it('does not include query params', function() {
       window.location.hash = '/myPath/rocks?queryParmas=2&more=3';
-      var router = new Router();
+      const router = new Router();
       assert.equal(router.currentPath(), '/myPath/rocks/');
     });
 
     it('ensures leading slash', function() {
       window.location.hash = 'myPath/rocks';
-      var router = new Router();
+      const router = new Router();
       assert.equal(router.currentPath(), '/myPath/rocks/');
     });
 
     it('ensures trailing slash', function() {
       window.location.hash = '/myPath/rocks';
-      var router = new Router();
+      const router = new Router();
       assert.equal(router.currentPath(), '/myPath/rocks/');
     });
   });
 
   describe('#navigate', function() {
     it('sets the history state with the given data if provided', function() {
-      var router = new Router();
-      var replaceStateStub = sinon.stub(window.history, 'replaceState');
-      var data = {data: 'test'};
+      const router = new Router();
+      const replaceStateStub = sinon.stub(window.history, 'replaceState');
+      const data = {data: 'test'};
       router.navigate('/newPath', data);
       sinon.assert.calledWith(replaceStateStub, data, '', '#/newPath');
       replaceStateStub.restore();
     });
 
     it('sets the route correctly', function() {
-      var router = new Router();
+      const router = new Router();
       router.navigate('/test');
       assert.equal(window.location.hash, '#/test');
     });
 
     it('pushes a relative route to the end of the url', function() {
-      var router = new Router();
+      const router = new Router();
       window.location.hash = '/startingRoute/more';
       router.navigate('end');
       assert.equal(window.location.hash, '#/startingRoute/more/end');
@@ -85,8 +100,8 @@ describe('Router', function() {
 
     describe('options', function() {
       it('trigger option calls handleRouteChange even if route has not changed', function() {
-        var handleRouteChangeSpy = sinon.spy();
-        var router = new Router({handleBeforeChange: handleRouteChangeSpy});
+        const handleRouteChangeSpy = sinon.spy();
+        const router = new Router({handleBeforeChange: handleRouteChangeSpy});
         router.map(function(match) {
           match('/test').to('test');
         });
@@ -101,8 +116,8 @@ describe('Router', function() {
 
   describe('#back', function() {
     it('calls history.back()', function() {
-      var historySpy = sinon.stub(window.history, 'back');
-      var router = new Router();
+      const historySpy = sinon.stub(window.history, 'back');
+      const router = new Router();
       router.back();
       sinon.assert.calledOnce(historySpy);
     });
@@ -110,8 +125,8 @@ describe('Router', function() {
 
   describe('#forward', function() {
     it('calls history.forward()', function() {
-      var historySpy = sinon.stub(window.history, 'forward');
-      var router = new Router();
+      const historySpy = sinon.stub(window.history, 'forward');
+      const router = new Router();
       router.forward();
       sinon.assert.calledOnce(historySpy);
     });
