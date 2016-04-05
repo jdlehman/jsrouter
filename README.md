@@ -95,7 +95,7 @@ The router takes an optional object as an argument that allows it to override de
 ```js
 var router = new Router({
   unrecognizedRouteHandler: function() {
-    this.navigate('/notFound');
+    router.navigate('/notFound');
   },
   // ...
   // etc.
