@@ -50,7 +50,7 @@ var router = new Router({
 
 > ({path: string, nextPath: string, queryParams: object, params: object}: object)
 
-Called before the `leave` handler is called during a route change. See the route change [lifecycle](./lifecycle.md) for more details. If the route is invalid (does not match a defined route), `queryParams` and `params` will not exist. The `params` key receives values from the [dynamic segments](./defining-routes.md#dynamic-segments) in the route (if any). Invalid routes should be handled by [`unrecognizedRouteHandler`](#unrecognizedroutehandler).
+Called before the `leave` handler is called during a route change. See the route change [lifecycle](./lifecycle.md) for more details. If this handler returns false, then the route change is cancelled. If the route is invalid (does not match a defined route), `queryParams` and `params` will not exist. The `params` key receives values from the [dynamic segments](./defining-routes.md#dynamic-segments) in the route (if any). Invalid routes should be handled by [`unrecognizedRouteHandler`](#unrecognizedroutehandler).
 
 ```js
 function beforeRouteChange({path, nextPath, queryParams, params}) {

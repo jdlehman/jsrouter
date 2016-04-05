@@ -98,6 +98,84 @@ describe('Router', function() {
       assert.equal(window.location.hash, '#/startingRoute/more/end');
     });
 
+    it('does not change when handleBeforeChange returns false', function() {
+      const router = new Router({
+        handleBeforeChange: () => false
+      });
+      window.location.hash = '/startingRoute';
+      router.navigate('/newRoute');
+      assert.equal(window.location.hash, '#/startingRoute');
+    });
+
+    it('calls beforeChange, leaveHandlers, enterHandlers, then afterChange', function(done) {
+      const queue = [];
+      window.location.hash = '/parent/child/child2';
+      const router = new Router({
+        handleBeforeChange: ({path}) => {
+          // prevents other tests from breaking this one
+          if (path === '/parent/child/child2/') {
+            queue.push('before');
+          }
+        },
+        handleAfterChange: ({path}) => {
+          // prevents other tests from breaking this one
+          if (path === '/newParent/newChild/newChild2/') {
+            queue.push('after');
+          }
+        }
+      });
+      router.map(match => {
+        match('/parent').to('parentHandler', match2 => {
+          match2('/child').to('childHandler', match3 => {
+            match3('/child2').to('child2Handler');
+          });
+        });
+        match('/newParent').to('newParentHandler', match2 => {
+          match2('/newChild').to('newChildHandler', match3 => {
+            match3('/newChild2').to('newChild2Handler');
+          });
+        });
+      });
+      router.addHandler('parentHandler', {
+        leave: () => queue.push('leaveParent'),
+        enter: () => {}
+      });
+      router.addHandler('childHandler', {
+        leave: () => queue.push('leaveChild'),
+        enter: () => {}
+      });
+      router.addHandler('child2Handler', {
+        leave: () => queue.push('leaveChild2'),
+        enter: () => {}
+      });
+
+      router.addHandler('newParentHandler', {
+        enter: () => queue.push('enterNewParent'),
+        leave: () => {}
+      });
+      router.addHandler('newChildHandler', {
+        enter: () => queue.push('enterNewChild'),
+        leave: () => {}
+      });
+      router.addHandler('newChild2Handler', {
+        enter: () => queue.push('enterNewChild2'),
+        leave: () => {}
+      });
+
+      router.navigate('/newParent/newChild/newChild2');
+      // need to wait until next tick for enter handlers to be called
+      // after the hashchange event
+      setTimeout(function() {
+        assert.deepEqual(queue, [
+          'before',
+          'leaveParent', 'leaveChild', 'leaveChild2',
+          'enterNewParent', 'enterNewChild', 'enterNewChild2',
+          'after'
+        ]);
+        done();
+      }, 0);
+    });
+
     describe('options', function() {
       it('trigger option calls handleRouteChange even if route has not changed', function() {
         const handleRouteChangeSpy = sinon.spy();

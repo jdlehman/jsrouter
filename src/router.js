@@ -9,23 +9,16 @@ import {
   callHandlers,
   getHandlers,
   getFlattenedHandlerArgs,
-  noop
+  noop,
+  isFalse
 } from './utils';
 
 function handleRouteChange(e) {
   const oldPath = pathFromHash(e.oldURL);
   const newPath = pathFromHash(e.newURL);
-
-  const leavePaths = {path: oldPath, nextPath: newPath};
   const enterPaths = {lastPath: oldPath, path: newPath};
-  const leaveHandlers = getHandlers(this.handlers, this.recognizer, leavePaths, 'leave');
   const enterHandlers = getHandlers(this.handlers, this.recognizer, enterPaths, 'enter');
-  const leaveArgs = getFlattenedHandlerArgs(leaveHandlers, leavePaths);
   const enterArgs = getFlattenedHandlerArgs(enterHandlers, enterPaths);
-
-  // call leave handlers
-  this.handleBeforeChange(leaveArgs);
-  leaveHandlers && callHandlers(leaveHandlers);
 
   // call enter handlers
   enterHandlers ? callHandlers(enterHandlers) : this.unrecognizedRouteHandler(oldPath, newPath);
@@ -103,13 +96,18 @@ export default class Router {
   }
 
   navigate(path, state = this.navigateState(), options = {}) {
-    let newPath;
+    const newPath = hasLeadingSlash(path) ? `#${path}` : `#${this.currentPath()}${path}`;
     const current = window.location.hash;
-    if (!hasLeadingSlash(path)) {
-      newPath = `#${this.currentPath()}${path}`;
-    } else {
-      newPath = `#${path}`;
-    }
+
+    // call leave handlers
+    const leavePaths = {path: pathFromHash(current), nextPath: pathFromHash(newPath)};
+    const leaveHandlers = getHandlers(this.handlers, this.recognizer, leavePaths, 'leave');
+    const leaveArgs = getFlattenedHandlerArgs(leaveHandlers, leavePaths);
+    const shouldChange = this.handleBeforeChange(leaveArgs);
+    if (isFalse(shouldChange)) { return; } // prevent path change if false
+    leaveHandlers && callHandlers(leaveHandlers);
+
+    // actually navigate
     window.location.hash = newPath;
     this.persistState(state, '', newPath);
     if (options.trigger && current === newPath) {

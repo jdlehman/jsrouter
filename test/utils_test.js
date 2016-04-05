@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import Recognizer from 'route-recognizer';
 import {
   noop,
+  isFalse,
   hasLeadingSlash,
   ensureLeadingSlash,
   ensureTrailingSlash,
@@ -16,6 +17,19 @@ describe('utils', function() {
   describe('noop', function() {
     it('is a function', function() {
       assert.isFunction(noop);
+    });
+  });
+
+  describe('isFalse', function() {
+    it('returns false if value is undefined and not falsey', function() {
+      assert.isFalse(isFalse(undefined));
+      assert.isFalse(isFalse(true));
+      assert.isFalse(isFalse(2));
+    });
+
+    it('returns true if value is false or null', function() {
+      assert.isTrue(isFalse(false));
+      assert.isTrue(isFalse(null));
     });
   });
 
