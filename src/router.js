@@ -36,12 +36,20 @@ function handleLoadEvent(e) {
   const path = pathFromHash(e.target.URL);
   const enterHandlers = getHandlers(this.handlers, this.recognizer, {path}, 'enter');
   enterHandlers && callHandlers(enterHandlers);
-  this.handleLoad(e);
+  const args = getFlattenedHandlerArgs(enterHandlers, {path});
+  this.handleLoad(e, args);
+}
+
+function handlePop(e) {
+  const path = this.currentPath();
+  const handlers = getHandlers(this.handlers, this.recognizer, {path});
+  const args = getFlattenedHandlerArgs(handlers, {path});
+  this.handlePopState(e, args);
 }
 
 function registerListeners() {
   window.addEventListener('load', handleLoadEvent.bind(this));
-  window.addEventListener('popstate', this.handlePopState);
+  window.addEventListener('popstate', handlePop.bind(this));
   window.addEventListener('hashchange', handleRouteChange.bind(this));
 }
 
