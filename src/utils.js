@@ -18,6 +18,10 @@ export function pathFromHash(url) {
 
 export function noop() {}
 
+export function isFalse(val) {
+  return typeof val !== 'undefined' && !val;
+}
+
 function trimQueryParams(path) {
   return path.split('?')[0];
 }

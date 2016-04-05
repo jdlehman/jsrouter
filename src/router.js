@@ -9,7 +9,8 @@ import {
   callHandlers,
   getHandlers,
   getFlattenedHandlerArgs,
-  noop
+  noop,
+  isFalse
 } from './utils';
 
 function handleRouteChange(e) {
@@ -99,10 +100,11 @@ export default class Router {
     const current = window.location.hash;
 
     // call leave handlers
-    const leavePaths = {path: current, nextPath: newPath};
+    const leavePaths = {path: pathFromHash(current), nextPath: pathFromHash(newPath)};
     const leaveHandlers = getHandlers(this.handlers, this.recognizer, leavePaths, 'leave');
     const leaveArgs = getFlattenedHandlerArgs(leaveHandlers, leavePaths);
-    this.handleBeforeChange(leaveArgs);
+    const shouldChange = this.handleBeforeChange(leaveArgs);
+    if (isFalse(shouldChange)) { return; } // prevent path change if false
     leaveHandlers && callHandlers(leaveHandlers);
 
     // actually navigate

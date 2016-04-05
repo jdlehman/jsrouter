@@ -97,6 +97,9 @@ var router = new Router({
   unrecognizedRouteHandler: function() {
     router.navigate('/notFound');
   },
+  handleBeforeChange: function({path, string, queryParams, params}) {
+    // do not change routes if this returns false
+  },
   // ...
   // etc.
 });

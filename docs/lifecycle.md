@@ -2,6 +2,8 @@
 
 When the hash changes the `leave` handler is called and then the `enter` handler is called. The before and after config options, `handleBeforeChange` and `handleAfterChange` respectively, can be used to perform extra logic during this behavior. These functions receive the old url and the new url as arguments and are called before enter and after leave.
 
+*Note:* If the `handleBeforeChange` returns false, then the route change is cancelled and the later handlers are not called.
+
 ```js
 function beforeRouteChange({path, nextPath, queryParams, params}) {
   console.log(`Going from ${path} to ${nextPath}`);
