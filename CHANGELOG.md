@@ -1,12 +1,27 @@
 # Changelog
 
-## 0.7.0
+## 1.0.0 (2016-10-30)
+
+Fixed:
+
+- Before handlers and leave handlers called BEFORE route is actually changed.
+
+Changed:
+
+- Pass more information in before and after change handlers. [f0d42d5](../../commit/f0d42d5)
+- Pass more information in load and popstate handlers. [dac14436](../../commit/dac14436)
+
+Added:
+
+- Cancel route change if `handleBeforeChange` returns false. [8a1aacf](../../commit/8a1aacf)
+
+## 0.7.0 (2016-3-17)
 
 Fixed:
 
 - Call enter handler on load, but not by calling navigate as that causes issues in edge cases. [e2465c7](../../commit/e2465c7)
 
-## 0.6.0
+## 0.6.0 (2016-2-18)
 
 Added:
 
