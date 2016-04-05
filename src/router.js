@@ -34,7 +34,7 @@ function handleRouteChange(e) {
 
 function handleLoadEvent(e) {
   const path = pathFromHash(e.target.URL);
-  const enterHandlers = getHandlers(this.handlers, this.recognizer, {lastPath: undefined, path}, 'enter');
+  const enterHandlers = getHandlers(this.handlers, this.recognizer, {path}, 'enter');
   enterHandlers && callHandlers(enterHandlers);
   this.handleLoad(e);
 }
