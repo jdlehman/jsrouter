@@ -13,9 +13,14 @@ import {
   isFalse
 } from './utils';
 
+let IEoldURL = '';
+
 function handleRouteChange(e) {
-  const oldPath = pathFromHash(e.oldURL);
-  const newPath = pathFromHash(e.newURL);
+  const oldURL = e.oldURL || IEoldURL;
+  const newURL = e.newURL || window.location.hash;
+  IEoldURL = newURL;
+  const oldPath = pathFromHash(oldURL);
+  const newPath = pathFromHash(newURL);
   const enterPaths = {lastPath: oldPath, path: newPath};
   const enterHandlers = getHandlers(this.handlers, this.recognizer, enterPaths, 'enter');
   const enterArgs = getFlattenedHandlerArgs(enterHandlers, enterPaths);
@@ -27,6 +32,7 @@ function handleRouteChange(e) {
 
 function handleLoadEvent(e) {
   const path = pathFromHash(e.target.URL);
+  IEoldURL = e.target.URL;
   const enterHandlers = getHandlers(this.handlers, this.recognizer, {path}, 'enter');
   enterHandlers && callHandlers(enterHandlers);
   const args = getFlattenedHandlerArgs(enterHandlers, {path});

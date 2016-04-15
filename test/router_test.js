@@ -109,7 +109,6 @@ describe('Router', function() {
 
     it('calls beforeChange, leaveHandlers, enterHandlers, then afterChange', function(done) {
       const queue = [];
-      window.location.hash = '/parent/child/child2';
       const router = new Router({
         handleBeforeChange: ({path}) => {
           // prevents other tests from breaking this one
@@ -161,7 +160,7 @@ describe('Router', function() {
         enter: () => queue.push('enterNewChild2'),
         leave: () => {}
       });
-
+      router.navigate('/parent/child/child2');
       router.navigate('/newParent/newChild/newChild2');
       // need to wait until next tick for enter handlers to be called
       // after the hashchange event
@@ -176,7 +175,7 @@ describe('Router', function() {
       }, 0);
     });
 
-    describe('options', function() {
+    describe('options', function(done) {
       it('trigger option calls handleRouteChange even if route has not changed', function() {
         const handleRouteChangeSpy = sinon.spy();
         const router = new Router({handleBeforeChange: handleRouteChangeSpy});
@@ -186,8 +185,11 @@ describe('Router', function() {
         router.addHandler('test', {});
         window.location.hash = '/test';
         router.navigate('/test', {}, {trigger: true});
-        assert.equal(window.location.hash, '#/test');
-        sinon.assert.called(handleRouteChangeSpy);
+        setTimeout(() => {
+          assert.equal(window.location.hash, '#/test');
+          sinon.assert.called(handleRouteChangeSpy);
+          done();
+        }, 0);
       });
     });
   });
