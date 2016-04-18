@@ -62,8 +62,6 @@ export function getFlattenedHandlerArgs(handlers, startingArgs) {
   if (!handlers) { return startingArgs; }
   const args = handlers[0].args;
   const flattenedParams = handlers
-    .reduce((mergedParams, {args: {params}}) => {
-      return {...mergedParams, ...params};
-    }, {});
+    .reduce((mergedParams, {args: {params}}) => ({...mergedParams, ...params}), {});
   return {...args, params: flattenedParams};
 }

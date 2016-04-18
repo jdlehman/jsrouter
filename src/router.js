@@ -12,6 +12,7 @@ import {
   noop,
   isFalse
 } from './utils';
+import {hashchange as addHashChangeListener} from './polyfills';
 
 function handleRouteChange(e) {
   const oldPath = pathFromHash(e.oldURL);
@@ -43,7 +44,7 @@ function handlePop(e) {
 function registerListeners() {
   window.addEventListener('load', handleLoadEvent.bind(this));
   window.addEventListener('popstate', handlePop.bind(this));
-  window.addEventListener('hashchange', handleRouteChange.bind(this));
+  addHashChangeListener(handleRouteChange.bind(this));
 }
 
 export default class Router {
