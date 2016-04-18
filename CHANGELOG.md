@@ -1,6 +1,12 @@
 # Changelog
 
-## 1.0.0 (2016-10-30)
+## 1.0.1 (2016-4-18)
+
+Fixed:
+
+- Fix `hashchange` on older browsers (IE8-11). Adds polyfill to provide `oldURL` and `newURL` properties on the `hashchange` event. [7d10c81](../../commit/7d10c81)
+
+## 1.0.0 (2016-4-5)
 
 Fixed:
 
