@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 (2016-10-26)
+
+Added:
+
+- Moved build to [rollup](http://rollupjs.org/) which reduces build size and adds more build file types to consume depending on a user's needs. [0d22809](../../commit/0d22809)
+
 ## 1.0.1 (2016-4-18)
 
 Fixed:
