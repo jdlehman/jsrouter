@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0 (2017-03-29)
+
+Changed:
+
+- Popping a route that is not nested will navigate to the root, rather than doing nothing. [21ef7fa](../../commit/21ef7fa)
+
 ## 1.0.2 (2016-10-26)
 
 Added:
