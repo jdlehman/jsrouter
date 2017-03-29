@@ -8,6 +8,119 @@ function defaultNavigateState() {
   return {};
 }
 
+var asyncGenerator = function () {
+  function AwaitValue(value) {
+    this.value = value;
+  }
+
+  function AsyncGenerator(gen) {
+    var front, back;
+
+    function send(key, arg) {
+      return new Promise(function (resolve, reject) {
+        var request = {
+          key: key,
+          arg: arg,
+          resolve: resolve,
+          reject: reject,
+          next: null
+        };
+
+        if (back) {
+          back = back.next = request;
+        } else {
+          front = back = request;
+          resume(key, arg);
+        }
+      });
+    }
+
+    function resume(key, arg) {
+      try {
+        var result = gen[key](arg);
+        var value = result.value;
+
+        if (value instanceof AwaitValue) {
+          Promise.resolve(value.value).then(function (arg) {
+            resume("next", arg);
+          }, function (arg) {
+            resume("throw", arg);
+          });
+        } else {
+          settle(result.done ? "return" : "normal", result.value);
+        }
+      } catch (err) {
+        settle("throw", err);
+      }
+    }
+
+    function settle(type, value) {
+      switch (type) {
+        case "return":
+          front.resolve({
+            value: value,
+            done: true
+          });
+          break;
+
+        case "throw":
+          front.reject(value);
+          break;
+
+        default:
+          front.resolve({
+            value: value,
+            done: false
+          });
+          break;
+      }
+
+      front = front.next;
+
+      if (front) {
+        resume(front.key, front.arg);
+      } else {
+        back = null;
+      }
+    }
+
+    this._invoke = send;
+
+    if (typeof gen.return !== "function") {
+      this.return = undefined;
+    }
+  }
+
+  if (typeof Symbol === "function" && Symbol.asyncIterator) {
+    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
+      return this;
+    };
+  }
+
+  AsyncGenerator.prototype.next = function (arg) {
+    return this._invoke("next", arg);
+  };
+
+  AsyncGenerator.prototype.throw = function (arg) {
+    return this._invoke("throw", arg);
+  };
+
+  AsyncGenerator.prototype.return = function (arg) {
+    return this._invoke("return", arg);
+  };
+
+  return {
+    wrap: function (fn) {
+      return function () {
+        return new AsyncGenerator(fn.apply(this, arguments));
+      };
+    },
+    await: function (value) {
+      return new AwaitValue(value);
+    }
+  };
+}();
+
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -100,8 +213,8 @@ function getHandlers(allHandlers, recognizer, pathArgs, handlerName) {
 
 function callHandlers(handlers) {
   handlers.forEach(function (_ref) {
-    var handler = _ref.handler;
-    var args = _ref.args;
+    var handler = _ref.handler,
+        args = _ref.args;
 
     if (typeof handler === 'function') {
       handler(args);
@@ -197,16 +310,14 @@ var Router = function () {
       }
     };
 
-    var _defaults$config = _extends({}, defaults, config);
-
-    var unrecognizedRouteHandler = _defaults$config.unrecognizedRouteHandler;
-    var handleLoad = _defaults$config.handleLoad;
-    var handlePopState = _defaults$config.handlePopState;
-    var navigateState = _defaults$config.navigateState;
-    var handleBeforeChange = _defaults$config.handleBeforeChange;
-    var handleAfterChange = _defaults$config.handleAfterChange;
-    var persistState = _defaults$config.persistState;
-
+    var _defaults$config = _extends({}, defaults, config),
+        unrecognizedRouteHandler = _defaults$config.unrecognizedRouteHandler,
+        handleLoad = _defaults$config.handleLoad,
+        handlePopState = _defaults$config.handlePopState,
+        navigateState = _defaults$config.navigateState,
+        handleBeforeChange = _defaults$config.handleBeforeChange,
+        handleAfterChange = _defaults$config.handleAfterChange,
+        persistState = _defaults$config.persistState;
 
     this.recognizer = new Recognizer();
     this.handlers = {};
@@ -241,8 +352,8 @@ var Router = function () {
   }, {
     key: 'navigate',
     value: function navigate(path) {
-      var state = arguments.length <= 1 || arguments[1] === undefined ? this.navigateState() : arguments[1];
-      var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.navigateState();
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
       var newPath = hasLeadingSlash(path) ? '#' + path : '#' + this.currentPath() + path;
       var current = window.location.hash;
@@ -281,7 +392,7 @@ var Router = function () {
   }, {
     key: 'pop',
     value: function pop() {
-      var matches = this.currentPath().match(/(.+)(?:\/.+\/?)/);
+      var matches = this.currentPath().match(/(.*)(?:\/.+\/?)/);
       if (matches) {
         this.navigate(matches[1] + '/');
       }
