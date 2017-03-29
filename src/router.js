@@ -129,7 +129,7 @@ export default class Router {
   }
 
   pop() {
-    const matches = this.currentPath().match(/(.+)(?:\/.+\/?)/);
+    const matches = this.currentPath().match(/(.*)(?:\/.+\/?)/);
     if (matches) {
       this.navigate(`${matches[1]}/`);
     }

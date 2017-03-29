@@ -223,10 +223,10 @@ describe('Router', function() {
       this.router.navigate.restore();
     });
 
-    it('does nothing when currentPath is not nested', function() {
+    it('goes to root when currentPath is not nested', function() {
       sinon.stub(this.router, 'currentPath').returns('/foo/');
       this.router.pop();
-      sinon.assert.notCalled(this.router.navigate);
+      sinon.assert.calledWith(this.router.navigate, '/');
     });
 
     it('calls #navigate with the parent path when currentPath is nested', function() {
