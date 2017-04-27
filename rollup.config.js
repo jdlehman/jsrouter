@@ -4,8 +4,6 @@ import replace from 'rollup-plugin-replace';
 export default {
   entry: 'src/router.js',
   plugins: [
-
-    // commonjs(),
     babel({
       babelrc: false,
       presets: ['es2015-rollup', 'stage-0'],
@@ -13,7 +11,7 @@ export default {
     }),
     replace({
       'process.env.NODE_DEBUG': false,
-      'process.env.NODE_ENV': 'production'
+      'process.env.NODE_ENV': '"production"'
     })
   ],
   globals: {
