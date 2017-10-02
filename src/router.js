@@ -1,3 +1,5 @@
+// @flow
+
 import Recognizer from 'route-recognizer';
 import {
   defaultUnrecognizedRouteHandler,
@@ -47,8 +49,31 @@ function registerListeners() {
   addHashChangeListener(handleRouteChange.bind(this));
 }
 
+type RouteHandler = (oldPath: string, newPath: string) => void;
+type EventHandler = (event: UIEvent, args: *) => void;
+
+type RouterConfig = {
+  unrecognizedRouteHandler?: RouteHandler,
+  handleLoad?: (event: UIEvent, args: *) => void,
+  handlePopState?: (event: UIEvent, args: *) => void,
+  navigateState?: () => {};
+  handleBeforeChange?: (leaveArgs: *) => void,
+  handleAfterChange?: (enterArgs: *) => void,
+  persistState?: * => void
+}
 export default class Router {
-  constructor(config) {
+  recognizer: Recognizer;
+  handlers: {};
+  unrecognizedRouteHandler: RouteHandler;
+  handleLoad: EventHandler;
+  handlePopState: EventHandler;
+  navigateState: () => {};
+  handleBeforeChange: (leaveArgs: *) => void;
+  handleAfterChange: (enterArgs: *) => void;
+  persistState: ({}, title: string, url: string) => void;
+
+
+  constructor(config: RouterConfig) {
     const defaults = {
       unrecognizedRouteHandler: defaultUnrecognizedRouteHandler.bind(this),
       handleLoad: noop,
@@ -84,19 +109,17 @@ export default class Router {
     registerListeners.call(this);
   }
 
-  addHandler(name, handler) {
+  addHandler(name: string, handler: () => *) {
     this.handlers[name] = handler;
   }
 
-  map(callback) {
-    this.recognizer.map(callback);
-  }
+  map = this.recognizer.map.bind(this.recognizer);
 
   currentPath() {
     return pathFromHash(window.location.hash.split('?')[0]);
   }
 
-  navigate(path, state = this.navigateState(), options = {}) {
+  navigate(path: string, state: {} = this.navigateState(), options:{} = {}) {
     const newPath = hasLeadingSlash(path) ? `#${path}` : `#${this.currentPath()}${path}`;
     const current = window.location.hash;
 

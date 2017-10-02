@@ -6,7 +6,7 @@ export default {
   plugins: [
     babel({
       babelrc: false,
-      presets: ['es2015-rollup', 'stage-0'],
+      presets: ['es2015-rollup', 'stage-0', 'flow'],
       exclude: 'node_modules/**',
     }),
     replace({

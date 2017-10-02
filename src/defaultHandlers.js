@@ -1,4 +1,6 @@
-export function defaultUnrecognizedRouteHandler(lastPath, path) {
+// @flow
+
+export function defaultUnrecognizedRouteHandler() {
   this.navigate('/');
 }
 
