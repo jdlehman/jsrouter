@@ -4,7 +4,7 @@ import Router from 'router';
 import {
   defaultUnrecognizedRouteHandler,
   defaultNavigateState
-} from 'defaultHandlers';
+} from '../src/defaultHandlers.re';
 
 describe('defaultHandlers', function() {
   describe('defaultUnrecognizedRouteHandler', function() {

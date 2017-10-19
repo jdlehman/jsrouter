@@ -2,7 +2,7 @@ import Recognizer from 'route-recognizer';
 import {
   defaultUnrecognizedRouteHandler,
   defaultNavigateState
-} from './defaultHandlers';
+} from './defaultHandlers.re';
 import {
   hasLeadingSlash,
   pathFromHash,

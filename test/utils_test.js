@@ -3,15 +3,27 @@ import sinon from 'sinon';
 import Recognizer from 'route-recognizer';
 import {
   noop,
-  isFalse,
+  // isFalse,
   hasLeadingSlash,
   ensureLeadingSlash,
   ensureTrailingSlash,
   pathFromHash,
+  // getHandlers,
+  // callHandlers,
+  // getFlattenedHandlerArgs
+} from '../src/utils.re';
+
+import {
+  // noop,
+  isFalse,
+  // hasLeadingSlash,
+  // ensureLeadingSlash,
+  // ensureTrailingSlash,
+  // pathFromHash,
   getHandlers,
   callHandlers,
   getFlattenedHandlerArgs
-} from 'utils';
+} from '../src/utils.js';
 
 describe('utils', function() {
   describe('noop', function() {

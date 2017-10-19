@@ -7,6 +7,7 @@ export default {
     babel({
       babelrc: false,
       presets: ['es2015-rollup', 'stage-0'],
+      plugins: ['babel-plugin-bucklescript'],
       exclude: 'node_modules/**',
     }),
     replace({

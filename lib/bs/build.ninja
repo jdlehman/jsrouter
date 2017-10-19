@@ -1,0 +1,36 @@
+bs_package_flags = -bs-package-name jsrouter
+src_root_dir = /Users/mthompson/OpenSource/jsrouter
+bsc = /Users/mthompson/OpenSource/jsrouter/node_modules/bs-platform/bin/bsc.exe
+bsdep = /Users/mthompson/OpenSource/jsrouter/node_modules/bs-platform/bin/bsb_helper.exe
+warnings = -w -40+6+7+27+32..39+44+45
+bsc_flags = -nostdlib -I '/Users/mthompson/OpenSource/jsrouter/node_modules/bs-platform/lib/ocaml' -no-alias-deps -color always
+ppx_flags = 
+bs_package_includes = 
+bs_package_dev_includes = 
+refmt = /Users/mthompson/OpenSource/jsrouter/node_modules/bs-platform/bin/refmt.exe
+reason_react_jsx = 
+refmt_flags = --print binary
+namespace = 
+bsb_dir_group = 0
+bsc_lib_includes = -I src
+rule build_ast_and_module_sets_from_re
+  command = ${bsc} -pp "${refmt} ${refmt_flags}" ${reason_react_jsx}  ${ppx_flags} ${warnings} ${bsc_flags} -c -o ${out} -bs-syntax-only -bs-binary-ast -impl ${in}
+  description = [34mBuilding[39m [2m${out}[22m
+build src/utils.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/utils.re
+rule build_deps
+  command = ${bsdep} ${namespace} -g ${bsb_dir_group} -MD ${in}
+  description = [34mBuilding[39m [2m${out}[22m
+build src/utils.mlast.d : build_deps src/utils.mlast
+rule build_cmj_cmi
+  command = ${bsc} ${bs_package_flags} -bs-assume-no-mli -bs-no-builtin-ppx-ml -bs-no-implicit-include ${bs_package_includes} ${bsc_lib_includes} ${bsc_extra_includes} ${warnings} ${bsc_flags} -o ${out} -c  ${in} $postbuild
+  depfile = ${in}.d
+  description = [34mBuilding[39m [2m${out}[22m
+build src/utils.cmj |  $src_root_dir/lib/es6/src/utils.js $src_root_dir/lib/js/src/utils.js src/utils.cmi : build_cmj_cmi src/utils.mlast
+  bsc_flags = $bsc_flags -bs-re-error -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src -bs-package-output es6:lib/es6/src
+build src/defaultHandlers.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/defaultHandlers.re
+build src/defaultHandlers.mlast.d : build_deps src/defaultHandlers.mlast
+build src/defaultHandlers.cmj |  $src_root_dir/lib/es6/src/defaultHandlers.js $src_root_dir/lib/js/src/defaultHandlers.js src/defaultHandlers.cmi : build_cmj_cmi src/defaultHandlers.mlast
+  bsc_flags = $bsc_flags -bs-re-error -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src -bs-package-output es6:lib/es6/src
+build build.ninja : phony  ||  src/defaultHandlers.mlast.d src/utils.mlast.d

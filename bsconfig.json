@@ -1,0 +1,5 @@
+{
+    "name": "jsrouter",
+    "sources": ["src"],
+    "package-specs": ["es6", "commonjs"]
+  }

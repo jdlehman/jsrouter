@@ -1,11 +1,11 @@
 {
   "presets": ["es2015", "stage-0", "react"],
+  "plugins": [
+    ["babel-plugin-bucklescript"]
+  ],
   "env": {
     "test": {
-      "auxiliaryCommentBefore": "istanbul ignore next"
-    },
-    "production": {
-      "plugins": ["transform-runtime"]
+      "ignore": false  
     }
   }
 }
