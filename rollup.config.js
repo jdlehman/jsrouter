@@ -1,9 +1,11 @@
 import babel from 'rollup-plugin-babel';
 import replace from 'rollup-plugin-replace';
+import nodeResolve from 'rollup-plugin-node-resolve';
 
 export default {
-  entry: 'src/router.js',
+  input: 'src/router.js',
   plugins: [
+    nodeResolve(),
     babel({
       babelrc: false,
       presets: ['es2015-rollup', 'stage-0'],
@@ -17,13 +19,12 @@ export default {
   globals: {
     react: 'React'
   },
-  moduleName: 'jsrouter',
   moduleId: 'jsrouter',
-  targets: [
-    {format: 'umd', dest: 'dist/jsrouter.umd.js'},
-    {format: 'iife', dest: 'dist/jsrouter.browser.js'},
-    {format: 'amd', dest: 'dist/jsrouter.amd.js'},
-    {format: 'cjs', dest: 'dist/jsrouter.cjs.js'},
-    {format: 'es', dest: 'dist/jsrouter.es-modules.js'}
+  output: [
+    {name: 'jsrouter', format: 'umd', file: 'dist/jsrouter.umd.js'},
+    {name: 'jsrouter', format: 'iife', file: 'dist/jsrouter.browser.js'},
+    {name: 'jsrouter', format: 'amd', file: 'dist/jsrouter.amd.js'},
+    {name: 'jsrouter', format: 'cjs', file: 'dist/jsrouter.cjs.js'},
+    {name: 'jsrouter', format: 'es', file: 'dist/jsrouter.es-modules.js'}
   ]
 };
