@@ -4,6 +4,8 @@
 
 # jsrouter
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/jdlehman/jsrouter.svg)](https://greenkeeper.io/)
+
 `jsrouter` is a minimal client side router based on `window.location.hash`. It utilizes [route-recognizer](https://github.com/tildeio/route-recognizer) to match routes and leans on this library for the API as well. For this reason, you will notice that the API is very similar to [Ember](http://emberjs.com/)'s [router](https://github.com/tildeio/router.js), though more minimal and with less lifecycle states.
 
 ## Installation
