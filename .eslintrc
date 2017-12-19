@@ -1,6 +1,4 @@
 {
-  "extends": "eslint-config-airbnb",
-
   "env": {
     "browser": true,
     "node": true,
@@ -9,10 +7,6 @@
   },
 
   "parser": "babel-eslint",
-
-  "ecmaFeatures": {
-    "modules": true
-  },
 
   "globals": {
     "assert": false
