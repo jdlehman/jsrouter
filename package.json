@@ -4,17 +4,19 @@
   "description": "Minimal client side router",
   "main": "dist/jsrouter.umd.min.js",
   "jsnext:main": "dist/jsrouter.es-modules.js",
+  "module": "dist/jsrouter.es-modules.js",
   "scripts": {
-    "build": "npm run clean && $(npm bin)/rollup -c && npm run minify",
-    "minify": "npm run minify-browser && npm run minify-umd",
-    "minify-browser": "$(npm bin)/uglifyjs dist/jsrouter.browser.js -cm > dist/jsrouter.browser.min.js",
-    "minify-umd": "$(npm bin)/uglifyjs dist/jsrouter.umd.js -cm > dist/jsrouter.umd.min.js",
-    "lint-src": "$(npm bin)/eslint ./src",
-    "lint-test": "$(npm bin)/eslint ./test",
-    "lint": "npm run lint-src && npm run lint-test",
-    "test": "NODE_PATH=$NODE_PATH:$PWD/src $(npm bin)/mocha -R dot --compilers js:babel-core/register --require ./test/setup.js --recursive",
+    "build": "yarn run clean && $(yarn bin)/rollup -c && yarn run minify",
+    "minify": "yarn run minify-browser && yarn run minify-umd",
+    "minify-browser": "$(yarn bin)/uglifyjs dist/jsrouter.browser.js -cm > dist/jsrouter.browser.min.js",
+    "minify-umd": "$(yarn bin)/uglifyjs dist/jsrouter.umd.js -cm > dist/jsrouter.umd.min.js",
+    "lint-src": "$(yarn bin)/eslint ./src",
+    "lint-test": "$(yarn bin)/eslint ./test",
+    "lint": "yarn run lint-src && yarn run lint-test",
+    "test": "NODE_PATH=$NODE_PATH:$PWD/src $(yarn bin)/mocha -R dot --compilers js:babel-core/register --require ./test/setup.js --recursive",
     "clean": "rm -rf dist/*",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "yarn run clean && yarn run build",
+    "prepare": "yarn run clean && yarn run build"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "route-recognizer",
     "javascript"
   ],
+  "files": ["dist"],
   "author": "Jonathan Lehman <jonathan.lehman91@gmail.com>",
   "license": "MIT",
   "devDependencies": {
