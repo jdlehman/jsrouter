@@ -16,15 +16,12 @@ export default {
       'process.env.NODE_ENV': '"production"'
     })
   ],
-  globals: {
-    react: 'React'
-  },
   moduleId: 'jsrouter',
   output: [
-    {name: 'jsrouter', format: 'umd', file: 'dist/jsrouter.umd.js'},
-    {name: 'jsrouter', format: 'iife', file: 'dist/jsrouter.browser.js'},
-    {name: 'jsrouter', format: 'amd', file: 'dist/jsrouter.amd.js'},
-    {name: 'jsrouter', format: 'cjs', file: 'dist/jsrouter.cjs.js'},
-    {name: 'jsrouter', format: 'es', file: 'dist/jsrouter.es-modules.js'}
+    {name: 'jsrouter', format: 'umd', file: 'dist/jsrouter.umd.js', globals: 'React'},
+    {name: 'jsrouter', format: 'iife', file: 'dist/jsrouter.browser.js', globals: 'React'},
+    {name: 'jsrouter', format: 'amd', file: 'dist/jsrouter.amd.js', globals: 'React'},
+    {name: 'jsrouter', format: 'cjs', file: 'dist/jsrouter.cjs.js', globals: 'React'},
+    {name: 'jsrouter', format: 'es', file: 'dist/jsrouter.es-modules.js', globals: 'React'}
   ]
 };
